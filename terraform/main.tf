@@ -26,7 +26,8 @@ resource "azurerm_linux_web_app" "app" {
 
     app_settings = {
     "Jwt__Key" = var.jwt_secret,
-    "Server__Port" = var.server_port
+    "Server__Port" = var.server_port,
+    "ASPNETCORE_ENVIRONMENT" = var.environment
   }
 
   https_only = false # apenas dev

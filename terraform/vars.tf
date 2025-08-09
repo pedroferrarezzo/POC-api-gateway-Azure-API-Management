@@ -22,3 +22,7 @@ variable "jwt_secret" {
 variable "server_port" {
   
 }
+
+variable "environment" {
+  
+}
