@@ -29,4 +29,4 @@ jobs:
           context: ./simpleauthapi
           file: ./simpleauthapi/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:{{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_TAG }}
