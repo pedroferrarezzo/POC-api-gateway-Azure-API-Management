@@ -1,5 +1,9 @@
 name: simpleauthapi CD
 
+permissions:
+  id-token: write   # Necessário para OIDC
+  contents: read    # Checkout e outras ações
+
 on:
   workflow_run:
     workflows: ["simpleauthapi CI"]
@@ -30,8 +34,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ./terraform
-        run: terraform plan -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
+        run: terraform plan -var="simpleapiauth_docker_image_name=${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_NAME }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
 
       - name: Terraform Apply
         working-directory: ./terraform
-        run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
+        run: terraform apply -auto-approve -var="simpleapiauth_docker_image_name=${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_NAME }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"

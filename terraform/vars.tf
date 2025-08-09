@@ -6,8 +6,7 @@ variable "location" {
   default = "East US"
 }
 
-variable "docker_image" {
-  default = "ferrarezzodev/apim-poc:latest"
+variable "simpleapiauth_docker_image_name" {
 }
 
 variable "docker_registry_url" {
