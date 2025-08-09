@@ -34,8 +34,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ./terraform
-        run: terraform plan -var="server_port=${{ secrets.SERVER_PORT }}" -var="simpleapiauth_docker_image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_TAG }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
+        run: terraform plan -var="server_port=${{ secrets.SERVER_PORT }}" -var="simpleapiauth_docker_image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ github.sha }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
 
       - name: Terraform Apply
         working-directory: ./terraform
-        run: terraform apply -auto-approve -var="server_port=${{ secrets.SERVER_PORT }}" -var="simpleapiauth_docker_image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_TAG }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
+        run: terraform apply -auto-approve -var="server_port=${{ secrets.SERVER_PORT }}" -var="simpleapiauth_docker_image_name=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ github.sha }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="jwt_secret=${{ secrets.JWT_SECRET }}"
