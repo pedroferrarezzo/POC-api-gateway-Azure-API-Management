@@ -21,6 +21,7 @@ Thumbs.db
 # Terraform state
 terraform/*.tfstate
 terraform/*.tfstate.*
+terraform/*.tfvars
 
 # Dotnet generated files
 simpleauthapi/*.db
