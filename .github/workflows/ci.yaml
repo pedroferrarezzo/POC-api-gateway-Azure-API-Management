@@ -30,3 +30,5 @@ jobs:
           file: ./simpleauthapi/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}:${{ secrets.SIMPLEAPIAUTH_DOCKER_IMAGE_TAG }}
+          build-args: |
+            EXPOSE_PORT=${{ secrets.SERVER_PORT }}

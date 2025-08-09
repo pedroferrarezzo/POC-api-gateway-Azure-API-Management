@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var serverPort = int.Parse(builder.Configuration["Server:Port"]);
 var key = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(key))
     throw new InvalidOperationException("Jwt:Key não está configurado.");
@@ -30,6 +31,11 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(serverPort);
+});
 
 var app = builder.Build();
 

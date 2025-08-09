@@ -18,3 +18,7 @@ variable "subscription_id" {
 
 variable "jwt_secret" {
 }
+
+variable "server_port" {
+  
+}
