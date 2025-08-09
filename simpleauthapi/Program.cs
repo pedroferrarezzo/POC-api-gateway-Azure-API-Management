@@ -4,10 +4,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var serverPort = int.Parse(builder.Configuration["Server:Port"]);
+var serverPortBuilder = builder.Configuration["Server:Port"];
+if (string.IsNullOrEmpty(serverPortBuilder))
+    throw new InvalidOperationException("Server:Port não está configurado.");
+var serverPort = int.Parse(serverPortBuilder);
+
 var key = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(key))
     throw new InvalidOperationException("Jwt:Key não está configurado.");
@@ -30,7 +35,34 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Insira o token JWT no formato: Bearer {seu token}"
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -41,7 +73,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 //app.UseHttpsRedirection();
@@ -56,17 +89,7 @@ var produtos = new[]
     "Lápis", "Caneta", "Caderno", "Borracha", "Apontador", "Papel", "Pincel", "Marcador", "Tesoura", "Cola"
 };
 
-app.MapGet("/clients", [Authorize]() =>
-{
-    return clientes;
-});
-
-app.MapGet("/products", [Authorize]() =>
-{
-    return produtos;
-});
-
-app.MapPost("/login", ([Microsoft.AspNetCore.Mvc.FromBody] LoginRequest request) =>
+app.MapPost("/login", [AllowAnonymous] ([Microsoft.AspNetCore.Mvc.FromBody] LoginRequest request) =>
 {
     if (clientes.Contains(request.Username))
     {
@@ -87,6 +110,16 @@ app.MapPost("/login", ([Microsoft.AspNetCore.Mvc.FromBody] LoginRequest request)
     }
 
     return Results.Unauthorized();
+});
+
+app.MapGet("/clients", [Authorize]() =>
+{
+    return clientes;
+});
+
+app.MapGet("/products", [Authorize]() =>
+{
+    return produtos;
 });
 
 app.UseAuthentication();
