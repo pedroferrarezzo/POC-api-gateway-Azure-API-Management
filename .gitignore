@@ -1,0 +1,30 @@
+# Build results
+simpleauthapi/bin/
+simpleauthapi/obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Terraform state
+terraform/*.tfstate
+terraform/*.tfstate.*
+
+# Dotnet generated files
+simpleauthapi/*.db
+simpleauthapi/*.pidb
+
+# Ignore secrets (caso existam)
+secrets.json
