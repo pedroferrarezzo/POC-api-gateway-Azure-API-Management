@@ -5,6 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using OpenAPI;
+using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,20 +51,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Insira o token JWT no formato: Bearer {seu token}"
     });
 
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
+    options.OperationFilter<OpenAPIAuthOperationFilter>();
 });
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -126,4 +116,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.Run();
 
-public record LoginRequest(string Username);
+public record LoginRequest(
+    [property: Required]
+    [property: SwaggerSchema(Description = "Nome do usuário")]
+    string Username
+);
